@@ -16,8 +16,8 @@ cp -i "/etc/kubernetes/admin.conf" "$HOME/.kube/config"
 chown $(id -u):$(id -g) "$HOME/.kube/config"
 
 echo "Creating Pod network via Calico..."
-kubectl create -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
-kubectl create -f https://docs.projectcalico.org/manifests/custom-resources.yaml
+kubectl apply -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
+kubectl apply -f https://docs.projectcalico.org/manifests/custom-resources.yaml
 
 echo "Creating new cluster join script..."
 touch /vagrant_work/join.sh
@@ -25,8 +25,8 @@ chmod +x /vagrant_work/join.sh
 kubeadm token create --print-join-command > /vagrant_work/join.sh
 
 echo "Creating load-balancing via MetalLB..."
-kubectl create -f https://raw.githubusercontent.com/metallb/metallb/v0.10.2/manifests/namespace.yaml
-kubectl create -f https://raw.githubusercontent.com/metallb/metallb/v0.10.2/manifests/metallb.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v${METALLB_VERSION}/manifests/namespace.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v${METALLB_VERSION}/manifests/metallb.yaml
 cat <<EOF > /tmp/metallb-config.yaml
 apiVersion: v1
 kind: ConfigMap

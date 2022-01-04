@@ -13,7 +13,7 @@ cp /vagrant/resources/yum.repos.d/kubernetes.repo kubernetes.repo
 chown root:root kubernetes.repo
 
 echo "Installing kubeadm, kubectl, and kubelet..."
-yum install -y kubeadm-1.23.* kubectl-1.23.* kubelet-1.23.* --disableexcludes=kubernetes
+yum install -y kubeadm-${KUBE_VERSION} kubectl-${KUBE_VERSION} kubelet-${KUBE_VERSION} --disableexcludes=kubernetes
 
 echo "Enabling Kublet through systemctl..."
 systemctl enable --now kubelet

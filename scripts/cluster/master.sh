@@ -8,7 +8,7 @@ echo "~ Configure Kubernetes Master Node                                        
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 
 echo "Initializing the Kubernetes cluster with Kubeadm.."
-kubeadm init --apiserver-advertise-address=192.168.56.10 --pod-network-cidr=192.168.0.0/16
+kubeadm init --config=/vagrant/conf/kubeadm.yml
 
 echo "Enabling kubectl access for root..."
 mkdir -p "$HOME/.kube"

@@ -23,4 +23,11 @@ cat <<EOF >  /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 EOF
+
+echo "Enabling IP forwarding..."
+cat <<EOF > /etc/sysctl.d/fwd.conf
+net.ipv4.conf.all.forwarding=1
+net.ipv6.conf.all.forwarding=1
+EOF
+
 sysctl --system

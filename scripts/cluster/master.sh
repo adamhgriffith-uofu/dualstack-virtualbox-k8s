@@ -8,6 +8,7 @@ echo "~ Configure Kubernetes Master Node                                        
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 
 echo "Initializing the Kubernetes cluster with Kubeadm.."
+kubeadm config images pull
 kubeadm init --config=/vagrant/resources/kubeadm/config.yml
 
 echo "Enabling kubectl access for root..."

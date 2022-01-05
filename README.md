@@ -13,3 +13,7 @@ VirtualBox on Linux requires a little extra love.
    * fe80::800:27ff:fe00:0/64
    ```
 
+## References
+
+* [Dual-stack support with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/dual-stack-support/)
+* [Calico: Configure dual stack or IPv6 only](https://projectcalico.docs.tigera.io/networking/ipv6)

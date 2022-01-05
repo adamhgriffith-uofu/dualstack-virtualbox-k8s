@@ -16,8 +16,9 @@ cp -i "/etc/kubernetes/admin.conf" "$HOME/.kube/config"
 chown $(id -u):$(id -g) "$HOME/.kube/config"
 
 echo "Creating Pod network via Calico..."
-kubectl apply -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
-kubectl apply -f https://docs.projectcalico.org/manifests/custom-resources.yaml
+kubectl apply -f /vagrant/resources/manifests/calico.yml
+#kubectl apply -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
+#kubectl apply -f https://docs.projectcalico.org/manifests/custom-resources.yaml
 
 echo "Creating new cluster join script..."
 touch /vagrant_work/join.sh

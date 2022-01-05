@@ -4202,7 +4202,7 @@ spec:
               value: "autodetect"
             # Auto-detect the interface for IPv6.
             - name: IP6_AUTODETECTION_METHOD
-              value: "interface=eth1"
+              value: "interface=eth2"
             # Enable IPIP
             - name: CALICO_IPV4POOL_IPIP
               value: "Always"

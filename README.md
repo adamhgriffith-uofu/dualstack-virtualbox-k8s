@@ -10,7 +10,7 @@ VirtualBox on Linux requires a little extra love.
 1. On the host add the following to `/etc/vbox/networks.conf`:
   
    ```shell
-   * fe80::800:27ff:fe00:0/64
+   * fde4:8dba:82e1::c4/64
    ```
 
 ## References

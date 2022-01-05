@@ -46,7 +46,7 @@ Vagrant.configure("2") do |config|
     master.vm.box = "centos/7"
     master.vm.hostname = "master"
     master.vm.network "private_network", ip: "192.168.56.10", netmask: "255.255.255.0"
-    master.vm.network "private_network", ip: "fe80::800:27ff:fe00:7c3c", netmask: "64"
+    master.vm.network "private_network", ip: "fde4:8dba:82e1::c4", netmask: "64"
 
     # VirtualBox Provider
     master.vm.provider "virtualbox" do |vb|
@@ -92,7 +92,7 @@ Vagrant.configure("2") do |config|
       worker.vm.box = "centos/7"
       worker.vm.hostname = "worker#{i}"
       worker.vm.network "private_network", ip: "192.168.56.1#{i}", netmask: "255.255.255.0"
-      worker.vm.network "private_network", ip: "fe80::800:27ff:fe00:7c3#{i}", netmask: "64"
+      worker.vm.network "private_network", ip: "fde4:8dba:82e1::c4#{i}", netmask: "64"
 
       # VirtualBox Provider
       worker.vm.provider "virtualbox" do |vb|

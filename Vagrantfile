@@ -29,16 +29,6 @@ Vagrant.configure("2") do |config|
   # Share an additional folder to the guest VM.
   config.vm.synced_folder "./work", "/vagrant_work", SharedFoldersEnableSymlinksCreate: false
 
-  # Provision with shell scripts.
-  config.vm.provision "shell", inline: <<-SHELL
-    echo "192.168.56.10 master" >> /etc/hosts
-    echo "fe80::800:27ff:fe00:7c3c master" >> /etc/hosts
-    echo "192.168.56.11 worker1" >> /etc/hosts
-    echo "fe80::800:27ff:fe00:7c31 worker1" >> /etc/hosts
-    echo "192.168.56.12 worker2" >> /etc/hosts
-    echo "fe80::800:27ff:fe00:7c32 worker2" >> /etc/hosts
-  SHELL
-
   ##############################################################
   # Create the master node.                                    #
   ##############################################################

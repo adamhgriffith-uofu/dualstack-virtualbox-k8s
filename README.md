@@ -51,7 +51,7 @@ Initialization is done for you.
 
 * The host directory `/<repo-location>/work` is mounted at `/vagrant_work` on each virtual machine.
 * When `master` is created it will create `/<repo-location>/work/join.sh`.
-* `/<repo-location>/work/join.sh` will be used by the workers to join the Kubernetes cluster automatically.
+* `/<repo-location>/work/join.sh` will be used by the worker nodes to join the Kubernetes cluster automatically.
 
 ## Teardown
 

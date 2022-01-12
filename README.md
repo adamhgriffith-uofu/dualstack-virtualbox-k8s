@@ -35,12 +35,15 @@ VirtualBox on Linux requires a little extra love.
   ```
 
 ## Build and Run
+1. Update the name of the bridged adaptor in the `Vagrantfile` to match the host.
+2. Copy `/<repo-location>/servers.yml.tmpl` to `/<repo-location>/servers.yml` and modify as needed.
+   * The first entry will be applied to the control plane and the remainder to the worker nodes.
+   * **Note:** If a single entry is specified only the control plane will be created.
+3. Bring up the virtual machines:
 
-Bring up the three virtual machines `master`, `worker1`, and `worker2`:
-
-```shell
-vagrant up
-```
+   ```shell
+   vagrant up
+   ```
 
 ### Initialize K8s Cluster
 

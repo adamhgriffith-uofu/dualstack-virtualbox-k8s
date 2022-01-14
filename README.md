@@ -27,8 +27,8 @@ See [Virtual Box](https://www.virtualbox.org/) for download and installation ins
 ## Build and Run
 1. Update the name of the bridged adaptor in the `Vagrantfile` to match the host.
 2. Copy `/<repo-location>/servers.yml.tmpl` to `/<repo-location>/servers.yml` and modify as needed.
-   * The first entry will be applied to the control plane and the remainder to the worker nodes.
-   * **Note:** If a single entry is specified only the control plane will be created.
+   * The first entry will be applied to the control-plane and the remainder to the worker nodes.
+   * **Note:** If a single entry is specified only the control-plane will be created.
 3. Bring up the virtual machines:
 
    ```shell
@@ -40,7 +40,7 @@ See [Virtual Box](https://www.virtualbox.org/) for download and installation ins
 Initialization is done for you.
 
 * The host directory `/<repo-location>/work` is mounted at `/vagrant_work` on each virtual machine.
-* When `master` is created it will create `/<repo-location>/work/join.sh`.
+* When the control-plane is created it will generate `/<repo-location>/work/join.sh`.
 * `/<repo-location>/work/join.sh` will be used by the worker nodes to join the Kubernetes cluster automatically.
 
 ## Teardown

@@ -59,4 +59,4 @@ See [Vagrant: Destroy](https://www.vagrantup.com/docs/cli/destroy) for additiona
 * [Dual-stack support with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/dual-stack-support/)
 * [Calico: Configure dual stack or IPv6 only](https://projectcalico.docs.tigera.io/networking/ipv6)
 * [Calico: IP autodetection methods](https://projectcalico.docs.tigera.io/reference/node/configuration#ip-autodetection-methods)
-* [Calico: Install Calico with etcd datastore](https://projectcalico.docs.tigera.io/getting-started/kubernetes/self-managed-onprem/onpremises#install-calico-with-kubernetes-api-datastore-50-nodes-or-less)
+* [kubeadm Configuration (v1beta3) Overview](https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta3/)

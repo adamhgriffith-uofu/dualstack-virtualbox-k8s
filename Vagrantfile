@@ -91,7 +91,8 @@ Vagrant.configure("2") do |config|
         # The control-plane (a.k.a. master) node.
         node.vm.provision "shell" do |script|
           script.env = {
-            APISERVER_ADVERT_ADDR:server['ipv4'],
+            IPV4_ADDR:server['ipv4'],
+            IPV6_ADDR: server['ipv6'],
             METALLB_VERSION:ENV['METALLB_VERSION']
           }
           script.path = "./scripts/cluster/master.sh"

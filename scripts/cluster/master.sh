@@ -9,10 +9,33 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 echo "Initializing the Kubernetes cluster with Kubeadm.."
 kubeadm config images pull
-kubeadm init \
-  --apiserver-advertise-address=${APISERVER_ADVERT_ADDR} \
-  --pod-network-cidr=10.244.0.0/16,fc00:db8:42:0::/56 \
-  --service-cidr=10.96.0.0/16,fc00:db8:42:1::/112
+cat << EOF > /tmp/kubeadm-config.yml
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: "${IPV4_ADDR}"
+  bindPort: 6443
+nodeRegistration:
+  kubeletExtraArgs:
+    node-ip: ${IPV4_ADDR},${IPV6_ADDR}
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: ClusterConfiguration
+networking:
+  podSubnet: fc00:db8:42:0::/56,10.233.0.0/16
+  serviceSubnet: fc00:db8:42:1::/112,10.233.64.0/16
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+cgroupDriver: systemd
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+mode: ipvs
+---
+EOF
+kubeadm init --config=/tmp/kubeadm-config.yml
 
 echo "Enabling kubectl access for root..."
 mkdir -p "$HOME/.kube"
@@ -47,3 +70,7 @@ kubeadm token create --print-join-command > /vagrant_work/join.sh
 #      - 192.168.56.11-192.168.56.12
 #EOF
 #kubectl apply -f /tmp/metallb-config.yaml
+
+# TODO: Put the master node taint back. This is temporary while debugging.
+echo "Temporarily removing master taint for debugging..."
+kubectl taint nodes --all node-role.kubernetes.io/master-

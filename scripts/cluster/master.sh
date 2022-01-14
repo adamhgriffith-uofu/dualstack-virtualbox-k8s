@@ -23,8 +23,8 @@ nodeRegistration:
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: ClusterConfiguration
 networking:
-  podSubnet: fc00:db8:42:0::/56,10.233.0.0/16
-  serviceSubnet: fc00:db8:42:1::/112,10.233.64.0/16
+  podSubnet: 10.233.0.0/16,fc00:db8:42:0::/56
+  serviceSubnet: 10.233.64.0/16,fc00:db8:42:1::/112
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration

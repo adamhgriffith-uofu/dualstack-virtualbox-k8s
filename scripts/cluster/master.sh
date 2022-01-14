@@ -9,7 +9,10 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 echo "Initializing the Kubernetes cluster with Kubeadm.."
 kubeadm config images pull
-kubeadm init --config=/vagrant/resources/kubeadm/config.yml
+kubeadm init \
+  --apiserver-advertise-address=${APISERVER_ADVERT_ADDR} \
+  --pod-network-cidr=10.244.0.0/16,fc00:db8:42:0::/56 \
+  --service-cidr=10.96.0.0/16,fc00:db8:42:1::/112
 
 echo "Enabling kubectl access for root..."
 mkdir -p "$HOME/.kube"

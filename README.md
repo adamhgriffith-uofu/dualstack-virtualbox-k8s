@@ -8,16 +8,6 @@ Tools to create dual-stack K8s with VirtualBox.
 
 See [Virtual Box](https://www.virtualbox.org/) for download and installation instructions.
 
-#### Linux
-
-VirtualBox on Linux requires a little extra love.
-
-1. On the host add the following to `/etc/vbox/networks.conf`:
-  
-   ```shell
-   * fde4:8dba:82e1::c4/64
-   ```
-
 ### Vagrant
 
 * [Download vagrant](https://www.vagrantup.com/downloads) and follow the installer's instructions.

@@ -24,9 +24,6 @@ Vagrant.configure("2") do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
-  # Always use Vagrant's default insecure key:
-  config.ssh.insert_key = true
-
   # Avoid updating the guest additions if the user has the plugin installed:
 #   if Vagrant.has_plugin?("vagrant-vbguest")
 #     config.vbguest.auto_update = false
@@ -44,7 +41,7 @@ Vagrant.configure("2") do |config|
   ##############################################################
   # Create the nodes.                                          #
   ##############################################################
-  servers.each do |server|
+  servers.each_with_index do |server, index|
 
     config.vm.define server['name'] do |node|
 
@@ -83,19 +80,26 @@ Vagrant.configure("2") do |config|
         }
         script.path = "./scripts/os-requirements.sh"
       end
-#       node.vm.provision "shell", path: "./scripts/cluster/docker.sh"
-#       node.vm.provision "shell" do |script|
-#         script.env = { KUBE_VERSION:ENV['KUBE_VERSION'] }
-#         script.path = "./scripts/cluster/kubernetes.sh"
-#       end
-#       if i < 2
-#         node.vm.provision "shell" do |script|
-#           script.env = { METALLB_VERSION:ENV['METALLB_VERSION'] }
-#           script.path = "./scripts/cluster/master.sh"
-#         end
-#       else
-#         node.vm.provision "shell", path: "./scripts/cluster/worker.sh"
-#       end
+      node.vm.provision "shell", path: "./scripts/cluster/docker.sh"
+      node.vm.provision "shell" do |script|
+        script.env = {
+          KUBE_VERSION:ENV['KUBE_VERSION']
+        }
+        script.path = "./scripts/cluster/kubernetes.sh"
+      end
+      if index < 2
+        # The control-plane (a.k.a. master) node.
+        node.vm.provision "shell" do |script|
+          script.env = {
+            APISERVER_ADVERT_ADDR:server['ipv4'],
+            METALLB_VERSION:ENV['METALLB_VERSION']
+          }
+          script.path = "./scripts/cluster/master.sh"
+        end
+      else
+        # The worker nodes.
+        node.vm.provision "shell", path: "./scripts/cluster/worker.sh"
+      end
     end
   end
 end

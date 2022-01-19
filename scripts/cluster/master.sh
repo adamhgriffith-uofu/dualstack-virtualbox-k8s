@@ -14,16 +14,24 @@ cat << EOF > /tmp/kubeadm-config.yml
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: InitConfiguration
 localAPIEndpoint:
-  advertiseAddress: "${IPV4_ADDR}"
+  advertiseAddress: "${IPV6_ADDR}"
   bindPort: 6443
 nodeRegistration:
+  name: ${HOSTNAME}
   kubeletExtraArgs:
     node-ip: ${IPV4_ADDR},${IPV6_ADDR}
 ---
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: ClusterConfiguration
+apiServer:
+  extraArgs:
+    advertise-address: "${IPV6_ADDR}"
+    service-cluster-ip-range: 10.233.64.0/16,fc00:db8:42:1::/112
+controllerManager:
+  extraArgs:
+    cluster-cidr: 10.244.0.0/16,fc00:db8:42:0::/56
+    service-cluster-ip-range: 10.233.64.0/16,fc00:db8:42:1::/112
 networking:
-  podSubnet: 10.233.0.0/16,fc00:db8:42:0::/56
   serviceSubnet: 10.233.64.0/16,fc00:db8:42:1::/112
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
@@ -33,6 +41,8 @@ cgroupDriver: systemd
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
 kind: KubeProxyConfiguration
 mode: ipvs
+extraArgs:
+  cluster-cidr: 10.244.0.0/16,fc00:db8:42:0::/56
 ---
 EOF
 kubeadm init --config=/tmp/kubeadm-config.yml

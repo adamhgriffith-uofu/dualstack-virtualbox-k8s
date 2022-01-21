@@ -71,6 +71,12 @@ Vagrant.configure("2") do |config|
         vb.name = server['name']
       end
 
+      # Perform housekeeping on `vagrant destroy`.
+      master.trigger.before :destroy do |trigger|
+        trigger.warn = "Performing housekeeping before starting destroy..."
+        trigger.run_remote = {path: "./scripts/cluster/housekeeping.sh"}
+      end
+
       # Provision with shell scripts.
       node.vm.provision "shell" do |script|
         script.env = {
@@ -87,7 +93,7 @@ Vagrant.configure("2") do |config|
         }
         script.path = "./scripts/cluster/kubernetes.sh"
       end
-      if index < 2
+      if index < 1
         # The control-plane (a.k.a. master) node.
         node.vm.provision "shell" do |script|
           script.env = {

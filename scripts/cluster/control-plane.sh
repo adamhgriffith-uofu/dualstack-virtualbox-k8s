@@ -7,9 +7,11 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo "~ Configure Kubernetes Control Plane                                              ~"
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 
-CLUSTER_CIDR=fc00:db8:1234:5678:8:2::/104,192.168.2.0/24
+CLUSTER_CIDR=fc00:db8:1234:5678:8:2::/104,10.10.0.0/16
+#CLUSTER_CIDR=fc00:db8:1234:5678:8:2::/104
 CLUSTER_DNS_IPV6=fc00:db8:1234:5678:8:3:0:a
-SERVICE_CLUSTER_IP_RANGE=fc00:db8:1234:5678:8:3::/112,192.168.3.0/24
+SERVICE_CLUSTER_IP_RANGE=fc00:db8:1234:5678:8:3::/112,10.20.0.0/16
+#SERVICE_CLUSTER_IP_RANGE=fc00:db8:1234:5678:8:3::/112
 
 echo "Initializing the Kubernetes cluster with Kubeadm.."
 kubeadm config images pull
@@ -37,7 +39,8 @@ controllerManager:
     allocate-node-cidrs: 'true'
     bind-address: '::'
     cluster-cidr: ${CLUSTER_CIDR}
-    node-cidr-mask-size: '120'
+    node-cidr-mask-size-ipv4: '24'
+    node-cidr-mask-size-ipv6: '120'
     service-cluster-ip-range: ${SERVICE_CLUSTER_IP_RANGE}
 etcd:
   local:
@@ -61,6 +64,12 @@ clusterDNS:
 - ${CLUSTER_DNS_IPV6}
 healthzBindAddress: ::1
 kind: KubeletConfiguration
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+clusterCIDR: ${CLUSTER_CIDR}
+kind: KubeProxyConfiguration
+mode: ipvs
+---
 EOF
 kubeadm init --config=/tmp/kubeadm-config.yml
 

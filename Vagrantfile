@@ -7,7 +7,7 @@ Vagrant.require_version ">= 2.0.0"
 require 'yaml'
 
 # Environmental Variables:
-# TODO: Add support for Calico environmental variable.
+# TODO: Add support for Calico version environmental variable.
 ENV['BRIDGED_ADAPTER'] = "enp8s0"
 ENV['KUBE_VERSION'] = "1.23.*"
 ENV['METALLB_VERSION'] = "0.11.0"

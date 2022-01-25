@@ -3590,7 +3590,9 @@ spec:
             # chosen from this range. Changing this value after installation will have
             # no effect. This should fall within `--cluster-cidr`.
             - name: CALICO_IPV4POOL_CIDR
-              value: "192.168.2.0/24"
+              value: "10.10.0.0/16"
+            - name: CALICO_IPV4POOL_BLOCK_SIZE
+              value: "24"
             # Disable file logging so `kubectl logs` works.
             - name: CALICO_DISABLE_FILE_LOGGING
               value: "true"
@@ -3609,8 +3611,6 @@ spec:
               value: "interface=eth2"
             - name: FELIX_IPV6SUPPORT
               value: "true"
-            - name: CALICO_ROUTER_ID
-              value: "hash"
             - name: CALICO_IPV6POOL_CIDR
               value: "fc00:db8:1234:5678:8:2::/104"
             - name: CALICO_IPV6POOL_BLOCK_SIZE

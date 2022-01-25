@@ -8,7 +8,7 @@ echo "~ Configure Kubernetes Control Plane                                      
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 
 # NOTE: Changes to CLUSTER_CIDR must be reflected in /resources/manifests/calico.yml's
-# CALICO_IPV4POOL_CIDR and CALICO_IPV6POOL_CIDR environmental variables.
+#       CALICO_IPV4POOL_CIDR and CALICO_IPV6POOL_CIDR environmental variables.
 CLUSTER_CIDR=fc00:db8:1234:5678:8:2::/104,10.10.0.0/16
 CLUSTER_DNS_IPV6=fc00:db8:1234:5678:8:3:0:a
 SERVICE_CLUSTER_IP_RANGE=fc00:db8:1234:5678:8:3::/112,10.20.0.0/16

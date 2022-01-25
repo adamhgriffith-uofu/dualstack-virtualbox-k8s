@@ -47,7 +47,7 @@ Initialization is done for you.
     * `/<repo-location>/work/join-config.yml`
     * `/<repo-location>/admin.conf`
 * `/<repo-location>/work/join-config.yml` will be used by the worker nodes to join the Kubernetes cluster automatically.
-* Currently `/<repo-location>/admin.conf` exists in a location mounted to all VMs (see #4).
+* Currently `/<repo-location>/admin.conf` exists in a location mounted to all VMs (see ["networkPlugin cni failed to set up pod" errors on worker nodes](https://github.com/adamhgriffith-uofu/ipv6-virtualbox-k8s/issues/4)).
 
 ### Validate Dual-stack
 

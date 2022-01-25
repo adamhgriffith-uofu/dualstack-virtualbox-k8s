@@ -15,6 +15,6 @@ nodeRegistration:
   criSocket: /var/run/dockershim.sock
   name: ${HOSTNAME}
   kubeletExtraArgs:
-    node-ip: ${IPV6_ADDR}
+    node-ip: ${IPV6_ADDR},${IPV4_ADDR}
 EOF
 kubeadm join --config="${JOIN_CONFIG_PATH}"

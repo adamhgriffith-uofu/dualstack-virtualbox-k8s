@@ -7,6 +7,10 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo "~ Configure Kubernetes Control Plane                                              ~"
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 
+CLUSTER_CIDR=fc00:db8:1234:5678:8:2::/104,192.168.2.0/24
+CLUSTER_DNS_IPV6=fc00:db8:1234:5678:8:3:0:a
+SERVICE_CLUSTER_IP_RANGE=fc00:db8:1234:5678:8:3::/112,192.168.3.0/24
+
 echo "Initializing the Kubernetes cluster with Kubeadm.."
 kubeadm config images pull
 cat << EOF > /tmp/kubeadm-config.yml
@@ -18,23 +22,23 @@ nodeRegistration:
   criSocket: /var/run/dockershim.sock
   name: ${HOSTNAME}
   kubeletExtraArgs:
-    cluster-dns: fc00:db8:1234:5678:8:3:0:a
-    node-ip: ${IPV6_ADDR}
+    cluster-dns: ${CLUSTER_DNS_IPV6}
+    node-ip: ${IPV6_ADDR},${IPV4_ADDR}
 ---
 apiServer:
   extraArgs:
     advertise-address: ${IPV6_ADDR}
     bind-address: '::'
     etcd-servers: https://[${IPV6_ADDR}]:2379
-    service-cluster-ip-range: fc00:db8:1234:5678:8:3::/112
+    service-cluster-ip-range: ${SERVICE_CLUSTER_IP_RANGE}
 apiVersion: kubeadm.k8s.io/v1beta3
 controllerManager:
   extraArgs:
     allocate-node-cidrs: 'true'
     bind-address: '::'
-    cluster-cidr: fc00:db8:1234:5678:8:2::/104
+    cluster-cidr: ${CLUSTER_CIDR}
     node-cidr-mask-size: '120'
-    service-cluster-ip-range: fc00:db8:1234:5678:8:3::/112
+    service-cluster-ip-range: ${SERVICE_CLUSTER_IP_RANGE}
 etcd:
   local:
     dataDir: /var/lib/etcd
@@ -46,7 +50,7 @@ etcd:
       listen-peer-urls: https://[${IPV6_ADDR}]:2380
 kind: ClusterConfiguration
 networking:
-  serviceSubnet: fc00:db8:1234:5678:8:3::/112
+  serviceSubnet: ${SERVICE_CLUSTER_IP_RANGE}
 scheduler:
   extraArgs:
     bind-address: '::'
@@ -54,7 +58,7 @@ scheduler:
 apiVersion: kubelet.config.k8s.io/v1beta1
 cgroupDriver: systemd
 clusterDNS:
-- fc00:db8:1234:5678:8:3:0:a
+- ${CLUSTER_DNS_IPV6}
 healthzBindAddress: ::1
 kind: KubeletConfiguration
 EOF
@@ -106,7 +110,7 @@ data:
           "mtu": 1500,
           "ipam": {
               "type": "calico-ipam",
-              "assign_ipv4": "false",
+              "assign_ipv4": "true",
               "assign_ipv6": "true"
           },
           "policy": {

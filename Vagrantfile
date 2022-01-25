@@ -84,9 +84,10 @@ Vagrant.configure("2") do |config|
       # Provision with shell scripts.
       node.vm.provision "shell" do |script|
         script.env = {
-            SEARCH_DOMAINS: server['search_domains'],
+            IPV4_ADDR: server['ipv4'],
             IPV6_ADDR: server['ipv6'],
-            IPV6_GW: server['ipv6_gw']
+            IPV6_GW: server['ipv6_gw'],
+            SEARCH_DOMAINS: server['search_domains']
         }
         script.path = "./scripts/os-requirements.sh"
       end
@@ -101,6 +102,7 @@ Vagrant.configure("2") do |config|
         # The control-plane (a.k.a. master) node.
         node.vm.provision "shell" do |script|
           script.env = {
+            IPV4_ADDR: server['ipv4'],
             IPV6_ADDR: server['ipv6'],
             METALLB_VERSION:ENV['METALLB_VERSION']
           }
@@ -110,6 +112,7 @@ Vagrant.configure("2") do |config|
         # The worker node(s).
         node.vm.provision "shell" do |script|
           script.env = {
+            IPV4_ADDR: server['ipv4'],
             IPV6_ADDR: server['ipv6']
           }
           script.path = "./scripts/cluster/worker.sh"

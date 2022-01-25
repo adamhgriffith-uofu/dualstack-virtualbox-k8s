@@ -13,9 +13,10 @@ CLUSTER_CIDR=fc00:db8:1234:5678:8:2::/104,10.10.0.0/16
 CLUSTER_DNS_IPV6=fc00:db8:1234:5678:8:3:0:a
 SERVICE_CLUSTER_IP_RANGE=fc00:db8:1234:5678:8:3::/112,10.20.0.0/16
 
-echo "Initializing the Kubernetes cluster with Kubeadm.."
+echo "Initializing the Kubernetes cluster with Kubeadm..."
 kubeadm config images pull
 cat << EOF > /tmp/kubeadm-config.yml
+---
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: InitConfiguration
 localAPIEndpoint:

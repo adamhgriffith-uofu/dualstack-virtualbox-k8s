@@ -36,12 +36,12 @@ EOF
 
 echo "Enabling IP forwarding..."
 cat <<EOF > /etc/sysctl.d/02-fwd.conf
-net.ipv4.conf.all.forwarding=1
 net.ipv6.conf.all.forwarding=1
+net.ipv4.conf.all.forwarding=1
 EOF
 
-echo "Configuring eth2..."
-cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-eth2
+echo "Configuring eth1..."
+cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-eth1
 TYPE=Ethernet
 PROXY_METHOD=none
 BROWSER_ONLY=no
@@ -52,17 +52,14 @@ IPV6INIT=yes
 IPV6_AUTOCONF=no
 IPV6_DEFROUTE=yes
 IPV6_FAILURE_FATAL=no
-NAME=eth2
-DEVICE=eth2
+NAME=eth1
+DEVICE=eth1
 ONBOOT=yes
 DOMAIN="${SEARCH_DOMAINS}"
 IPV6ADDR=${IPV6_ADDR}
 IPV6_DEFAULTGW=${IPV6_GW}
 IPV6_PRIVACY=no
 EOF
-#cat <<EOF > /etc/sysconfig/network-scripts/route-eth2
-#default via 2001:1948:414:10::1 dev eth2
-#EOF
 
 echo "Applying changes..."
 sysctl --system

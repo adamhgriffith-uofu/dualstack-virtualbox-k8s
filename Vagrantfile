@@ -7,6 +7,7 @@ Vagrant.require_version ">= 2.0.0"
 require 'yaml'
 
 # Environmental Variables:
+# TODO: Add support for Calico environmental variable.
 ENV['BRIDGED_ADAPTER'] = "enp8s0"
 ENV['KUBE_VERSION'] = "1.23.*"
 ENV['METALLB_VERSION'] = "0.11.0"
@@ -50,6 +51,7 @@ Vagrant.configure("2") do |config|
 
       # Create a private IPv4 network.
       node.vm.network "private_network", ip: server['ipv4'], netmask: server['ipv4_mask']
+
       # Create a bridged network adaptor (for IPv6).
       node.vm.network "public_network", auto_config: false, bridge: ENV['BRIDGED_ADAPTER']
 
@@ -71,10 +73,12 @@ Vagrant.configure("2") do |config|
         vb.name = server['name']
       end
 
-      # Perform housekeeping on `vagrant destroy`.
-      node.trigger.before :destroy do |trigger|
-        trigger.warn = "Performing housekeeping before starting destroy..."
-        trigger.run_remote = {path: "./scripts/cluster/housekeeping.sh"}
+      if index < 1
+        # Perform housekeeping on `vagrant destroy` of the control-plane (a.k.a. master) node..
+        node.trigger.before :destroy do |trigger|
+          trigger.warn = "Performing housekeeping before starting destroy..."
+          trigger.run_remote = {path: "./scripts/cluster/housekeeping.sh"}
+        end
       end
 
       # Provision with shell scripts.
@@ -97,15 +101,19 @@ Vagrant.configure("2") do |config|
         # The control-plane (a.k.a. master) node.
         node.vm.provision "shell" do |script|
           script.env = {
-            IPV4_ADDR:server['ipv4'],
             IPV6_ADDR: server['ipv6'],
             METALLB_VERSION:ENV['METALLB_VERSION']
           }
-          script.path = "./scripts/cluster/master.sh"
+          script.path = "./scripts/cluster/control-plane.sh"
         end
       else
-        # The worker nodes.
-        node.vm.provision "shell", path: "./scripts/cluster/worker.sh"
+        # The worker node(s).
+        node.vm.provision "shell" do |script|
+          script.env = {
+            IPV6_ADDR: server['ipv6']
+          }
+          script.path = "./scripts/cluster/worker.sh"
+        end
       end
     end
   end

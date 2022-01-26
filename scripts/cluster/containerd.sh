@@ -17,13 +17,13 @@ echo "Installing the latest version of containerd..."
 yum install containerd.io -y
 
 echo "Configuring the systemd cgroup driver..."
-mkdir /etc/containerd
-containerd config default | tee /etc/containerd/config.toml
-cat <<EOF >> /etc/containerd/config.toml
-[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
-  [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
-    SystemdCgroup = true
-EOF
+CONTAINDERD_CONFIG_PATH=/etc/containerd/config.toml
+rm "${CONTAINDERD_CONFIG_PATH}"
+containerd config default > "${CONTAINDERD_CONFIG_PATH}"
+sed -i "/runc.options/a\            SystemdCgroup = true" "${CONTAINDERD_CONFIG_PATH}"
+
+echo "Enabling containerd through systemctl..."
+systemctl enable -now containerd
 
 echo "Applying changes..."
 systemctl restart containerd

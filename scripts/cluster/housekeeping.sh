@@ -18,9 +18,3 @@ then
   echo "Deleting old /vagrant_work/join-config.yml.part..."
   rm /vagrant_work/join-config.yml.part
 fi
-
-if [ -f "/vagrant_work/join-config.yml" ]
-then
-  echo "Deleting old /vagrant_work/join-config.yml..."
-  rm /vagrant_work/join-config.yml
-fi

@@ -44,9 +44,8 @@ Initialization is done for you.
 * The host directory `/<repo-location>/work` is mounted at `/vagrant_work` on each virtual machine.
 * When the control-plane is created it will generate:
     * `/<repo-location>/work/join-config.yml.part`
-    * `/<repo-location>/work/join-config.yml`
     * `/<repo-location>/admin.conf`
-* `/<repo-location>/work/join-config.yml` will be used by the worker nodes to join the Kubernetes cluster automatically.
+* `/<repo-location>/work/join-config.yml.part` will be used by the worker nodes to join the Kubernetes cluster automatically.
 * Currently `/<repo-location>/admin.conf` exists in a location mounted to all VMs (see ["networkPlugin cni failed to set up pod" errors on worker nodes](https://github.com/adamhgriffith-uofu/ipv6-virtualbox-k8s/issues/4)).
 
 ### Validate Dual-stack
@@ -63,7 +62,6 @@ vagrant destroy -f
 
 After destroying the VMs Vagrant will automatically remove the following files during the housekeeping step:
 * `/<repo-location>/work/join-config.yml.part`
-* `/<repo-location>/work/join-config.yml`
 * `/<repo-location>/admin.conf`
 
 See [Vagrant: Destroy](https://www.vagrantup.com/docs/cli/destroy) for additional information.

@@ -12,7 +12,7 @@ JOIN_CONFIG_PATH=/vagrant_work/join-config.yml
 cp /vagrant_work/join-config.yml.part "${JOIN_CONFIG_PATH}"
 cat <<EOF >> "${JOIN_CONFIG_PATH}"
 nodeRegistration:
-  criSocket: /var/run/dockershim.sock
+  criSocket: /var/run/containerd/containerd.sock
   name: ${HOSTNAME}
   kubeletExtraArgs:
     node-ip: ${IPV6_ADDR},${IPV4_ADDR}

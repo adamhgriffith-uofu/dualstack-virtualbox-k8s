@@ -91,7 +91,7 @@ Vagrant.configure("2") do |config|
         }
         script.path = "./scripts/os-requirements.sh"
       end
-      node.vm.provision "shell", path: "./scripts/cluster/docker.sh"
+      node.vm.provision "shell", path: "./scripts/cluster/containerd.sh"
       node.vm.provision "shell" do |script|
         script.env = {
           KUBE_VERSION:ENV['KUBE_VERSION']

@@ -23,7 +23,7 @@ containerd config default > "${CONTAINDERD_CONFIG_PATH}"
 sed -i "/runc.options/a\            SystemdCgroup = true" "${CONTAINDERD_CONFIG_PATH}"
 
 echo "Enabling containerd through systemctl..."
-systemctl enable -now containerd
+systemctl enable --now containerd
 
 echo "Applying changes..."
 systemctl restart containerd

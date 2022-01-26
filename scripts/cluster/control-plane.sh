@@ -22,7 +22,7 @@ kind: InitConfiguration
 localAPIEndpoint:
   advertiseAddress: ${IPV6_ADDR}
 nodeRegistration:
-  criSocket: /var/run/dockershim.sock
+  criSocket: /var/run/containerd/containerd.sock
   name: ${HOSTNAME}
   kubeletExtraArgs:
     cluster-dns: ${CLUSTER_DNS_IPV6}

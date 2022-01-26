@@ -79,3 +79,4 @@ See [Vagrant: Destroy](https://www.vagrantup.com/docs/cli/destroy) for additiona
 * [Calico: IP autodetection methods](https://projectcalico.docs.tigera.io/reference/node/configuration#ip-autodetection-methods)
 * [Install calicoctl](https://projectcalico.docs.tigera.io/maintenance/clis/calicoctl/install)
 * [kubeadm Configuration (v1beta3) Overview](https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta3/)
+* [Container runtimes: containerd](https://kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd)

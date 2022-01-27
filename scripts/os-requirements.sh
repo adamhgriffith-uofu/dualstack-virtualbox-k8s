@@ -18,16 +18,6 @@ sed -e '/swap/s/^/#/g' -i /etc/fstab
 echo "Disabling firewalld..."
 systemctl disable --now firewalld
 
-#echo "Installing IPVS-required kernel modules..."
-#yum install -y ipvsadm
-#cat <<EOF > /etc/modules-load.d/01-ipvs.conf
-#ip_vs
-#ip_vs_rr
-#ip_vs_wrr
-#ip_vs_sh
-#nf_conntrack_ipv4
-#EOF
-
 echo "Setting iptables for bridged network traffic..."
 cat <<EOF >  /etc/sysctl.d/01-k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1

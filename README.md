@@ -31,7 +31,7 @@ See [Virtual Box](https://www.virtualbox.org/) for download and installation ins
    * The addresses for `metallb` must be internet routable.
    * The first entry in `servers` will be applied to the control-plane and the remainder to the worker nodes.
      * If a single `server` entry is specified only the control-plane will be created.
-   * **Important:** All `server` entries must be internet routable.
+     * All `ipv6`s must be internet routable.
 3. Bring up the virtual machines:
 
    ```shell

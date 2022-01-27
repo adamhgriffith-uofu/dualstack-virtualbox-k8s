@@ -12,8 +12,9 @@ ENV['BRIDGED_ADAPTER'] = "enp8s0"
 ENV['KUBE_VERSION'] = "1.23.*"
 ENV['METALLB_VERSION'] = "0.11.0"
 
-# Load servers from file:
-servers = YAML.load_file('./servers.yml')
+# Load settings from file:
+settings = YAML.load_file('./settings.yml')
+servers = settings['servers']
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
@@ -104,6 +105,7 @@ Vagrant.configure("2") do |config|
           script.env = {
             IPV4_ADDR: server['ipv4'],
             IPV6_ADDR: server['ipv6'],
+            METALLB_ADDRESSES: settings['global']['metallb']['addresses'],
             METALLB_VERSION:ENV['METALLB_VERSION']
           }
           script.path = "./scripts/cluster/control-plane.sh"

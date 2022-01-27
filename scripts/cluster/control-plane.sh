@@ -86,6 +86,9 @@ echo "TEMPORARY: Copying kubeconfig (admin.conf) to /vagrant_work..."
 HACK_KUBECONFIG_PATH=/vagrant_work/admin.conf
 cp -i /etc/kubernetes/admin.conf "${HACK_KUBECONFIG_PATH}"
 
+echo "Removing control-plane pod taint..."
+kubectl taint nodes --all node-role.kubernetes.io/master-
+
 echo "Creating Pod network via Calico..."
 cat <<EOF > /tmp/calico-config.yml
 # Source: calico/templates/calico-config.yaml
@@ -184,9 +187,6 @@ data:
     - name: default
       protocol: layer2
       addresses:
-      - 192.168.56.11-192.168.56.12
+      - ${METALLB_ADDRESSES}
 EOF
 kubectl apply -f /tmp/metallb-config.yaml
-
-echo "Removing control-plane pod taint..."
-kubectl taint nodes --all node-role.kubernetes.io/master-

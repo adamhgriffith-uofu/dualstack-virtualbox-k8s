@@ -14,10 +14,10 @@ CLUSTER_DNS_IPV6=fc00:db8:1234:5678:8:3:0:a
 SERVICE_CLUSTER_IP_RANGE=fc00:db8:1234:5678:8:3::/112,10.20.0.0/16
 
 echo "Initializing the Kubernetes cluster with Kubeadm..."
-kubeadm config images pull
+#kubeadm config images pull
 cat << EOF > /tmp/kubeadm-config.yml
 ---
-apiVersion: kubeadm.k8s.io/v1beta3
+apiVersion: kubeadm.k8s.io/v1beta2
 kind: InitConfiguration
 localAPIEndpoint:
   advertiseAddress: ${IPV6_ADDR}
@@ -34,7 +34,7 @@ apiServer:
     bind-address: '::'
     etcd-servers: https://[${IPV6_ADDR}]:2379
     service-cluster-ip-range: ${SERVICE_CLUSTER_IP_RANGE}
-apiVersion: kubeadm.k8s.io/v1beta3
+apiVersion: kubeadm.k8s.io/v1beta2
 controllerManager:
   extraArgs:
     allocate-node-cidrs: 'true'

@@ -15,6 +15,6 @@ nodeRegistration:
   criSocket: /var/run/containerd/containerd.sock
   name: ${HOSTNAME}
   kubeletExtraArgs:
-    node-ip: ${IPV6_ADDR},${IPV4_ADDR}
+    node-ip: ${IPV4_ADDR},${IPV6_ADDR}
 EOF
 kubeadm join --config="${JOIN_CONFIG_PATH}"

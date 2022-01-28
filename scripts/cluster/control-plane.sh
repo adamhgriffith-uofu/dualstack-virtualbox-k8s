@@ -9,9 +9,9 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # NOTE: Changes to CLUSTER_CIDR must be reflected in /resources/manifests/calico.yml's
 #       CALICO_IPV4POOL_CIDR and CALICO_IPV6POOL_CIDR environmental variables.
-CLUSTER_CIDR=fc00:db8:1234:5678:8:2::/104,10.10.0.0/16
-CLUSTER_DNS_IPV6=fc00:db8:1234:5678:8:3:0:a
-SERVICE_CLUSTER_IP_RANGE=fc00:db8:1234:5678:8:3::/112,10.20.0.0/16
+CLUSTER_CIDR=10.10.0.0/16,fc00:db8:1234:5678:8:2::/104
+CLUSTER_DNS=10.20.0.10
+SERVICE_CLUSTER_IP_RANGE=10.20.0.0/16,fc00:db8:1234:5678:8:3::/112
 
 echo "Initializing the Kubernetes cluster with Kubeadm..."
 #kubeadm config images pull
@@ -20,25 +20,25 @@ cat << EOF > /tmp/kubeadm-config.yml
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: InitConfiguration
 localAPIEndpoint:
-  advertiseAddress: ${IPV6_ADDR}
+  advertiseAddress: ${IPV4_ADDR}
 nodeRegistration:
   criSocket: /var/run/containerd/containerd.sock
   name: ${HOSTNAME}
   kubeletExtraArgs:
-    cluster-dns: ${CLUSTER_DNS_IPV6}
-    node-ip: ${IPV6_ADDR},${IPV4_ADDR}
+    cluster-dns: ${CLUSTER_DNS}
+    node-ip: ${IPV4_ADDR},${IPV6_ADDR}
 ---
 apiServer:
   extraArgs:
-    advertise-address: ${IPV6_ADDR}
-    bind-address: '::'
-    etcd-servers: https://[${IPV6_ADDR}]:2379
+    advertise-address: ${IPV4_ADDR}
+    bind-address: '0.0.0.0'
+    etcd-servers: https://${IPV4_ADDR}:2379
     service-cluster-ip-range: ${SERVICE_CLUSTER_IP_RANGE}
 apiVersion: kubeadm.k8s.io/v1beta2
 controllerManager:
   extraArgs:
     allocate-node-cidrs: 'true'
-    bind-address: '::'
+    bind-address: '0.0.0.0'
     cluster-cidr: ${CLUSTER_CIDR}
     node-cidr-mask-size-ipv4: '24'
     node-cidr-mask-size-ipv6: '120'
@@ -47,23 +47,23 @@ etcd:
   local:
     dataDir: /var/lib/etcd
     extraArgs:
-      advertise-client-urls: https://[${IPV6_ADDR}]:2379
-      initial-advertise-peer-urls: https://[${IPV6_ADDR}]:2380
-      initial-cluster: ${HOSTNAME}=https://[${IPV6_ADDR}]:2380
-      listen-client-urls: https://[${IPV6_ADDR}]:2379
-      listen-peer-urls: https://[${IPV6_ADDR}]:2380
+      advertise-client-urls: https://${IPV4_ADDR}:2379
+      initial-advertise-peer-urls: https://${IPV4_ADDR}:2380
+      initial-cluster: ${HOSTNAME}=https://${IPV4_ADDR}:2380
+      listen-client-urls: https://${IPV4_ADDR}:2379
+      listen-peer-urls: https://${IPV4_ADDR}:2380
 kind: ClusterConfiguration
 networking:
   serviceSubnet: ${SERVICE_CLUSTER_IP_RANGE}
 scheduler:
   extraArgs:
-    bind-address: '::'
+    bind-address: '0.0.0.0'
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 cgroupDriver: systemd
 clusterDNS:
-- ${CLUSTER_DNS_IPV6}
-healthzBindAddress: ::1
+- ${CLUSTER_DNS}
+healthzBindAddress: 127.0.0.1
 kind: KubeletConfiguration
 ---
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
@@ -166,7 +166,7 @@ apiVersion: kubeadm.k8s.io/v1beta3
 kind: JoinConfiguration
 discovery:
   bootstrapToken:
-    apiServerEndpoint: "[${IPV6_ADDR}]:6443"
+    apiServerEndpoint: "${IPV4_ADDR}:6443"
     token: "${K8_TOKEN}"
     caCertHashes:
     - "sha256:${K8_DISCO_CERT}"

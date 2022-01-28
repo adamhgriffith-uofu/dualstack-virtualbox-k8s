@@ -31,7 +31,7 @@ net.ipv4.conf.all.forwarding=1
 EOF
 
 echo "Configuring eth2..."
-cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-eth2
+cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-eth1
 TYPE=Ethernet
 PROXY_METHOD=none
 BROWSER_ONLY=no
@@ -42,13 +42,18 @@ IPV6INIT=yes
 IPV6_AUTOCONF=no
 IPV6_DEFROUTE=yes
 IPV6_FAILURE_FATAL=no
-NAME=eth2
-DEVICE=eth2
+NAME=eth1
+DEVICE=eth1
 ONBOOT=yes
+IPADDR=${IPV4_ADDR}
+PREFIX=${IPV4_MASK}
+GATEWAY=${IPV4_GW}
+DNS1=155.101.3.11
 DOMAIN="${SEARCH_DOMAINS}"
-IPV6ADDR=${IPV6_ADDR}
+IPV6ADDR=${IPV6_ADDR}/${IPV6_MASK}
 IPV6_DEFAULTGW=${IPV6_GW}
 IPV6_PRIVACY=no
+ZONE=public
 EOF
 
 echo "Applying changes..."

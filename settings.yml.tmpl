@@ -5,14 +5,15 @@
 
 global:
   metallb:
-    addresses: <value>
+    addresses: <range>
 
 servers:
 - name: <value>
-  ipv4: <value allowed by VirtualBox's Host-only network, e.g. 192.168.56.11>
+  ipv4: <value>
+  ipv4_mask: <numerical value>
   ipv4_gw: <value>
-  ipv4_mask: <value>
   ipv6: <value>
+  ipv6_mask: <numerical value>
   ipv6_gw: <value>
-  search_domains: "<string value>"
+  search_domains: "<value>"
 

@@ -69,6 +69,8 @@ kind: KubeletConfiguration
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
 clusterCIDR: ${CLUSTER_CIDR}
 kind: KubeProxyConfiguration
+ipvs:
+  strictARP: true
 mode: ipvs
 ---
 EOF
@@ -83,6 +85,9 @@ echo "TEMPORARY: Copying kubeconfig (admin.conf) to /vagrant_work..."
 # TODO: Figure out why worker nodes are inappropriately needing a local copy of admin.conf.
 HACK_KUBECONFIG_PATH=/vagrant_work/admin.conf
 cp -i /etc/kubernetes/admin.conf "${HACK_KUBECONFIG_PATH}"
+
+echo "Removing control-plane pod taint..."
+kubectl taint nodes --all node-role.kubernetes.io/master-
 
 echo "Creating Pod network via Calico..."
 cat <<EOF > /tmp/calico-config.yml
@@ -167,24 +172,21 @@ discovery:
     - "sha256:${K8_DISCO_CERT}"
 EOF
 
-#echo "Creating load-balancing via MetalLB..."
-#kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v${METALLB_VERSION}/manifests/namespace.yaml
-#kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v${METALLB_VERSION}/manifests/metallb.yaml
-#cat <<EOF > /tmp/metallb-config.yaml
-#apiVersion: v1
-#kind: ConfigMap
-#metadata:
-#  namespace: metallb-system
-#  name: config
-#data:
-#  config: |
-#    address-pools:
-#    - name: default
-#      protocol: layer2
-#      addresses:
-#      - 192.168.56.11-192.168.56.12
-#EOF
-#kubectl apply -f /tmp/metallb-config.yaml
-
-echo "Removing control-plane pod taint..."
-kubectl taint nodes --all node-role.kubernetes.io/master-
+echo "Creating load-balancing via MetalLB..."
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v${METALLB_VERSION}/manifests/namespace.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v${METALLB_VERSION}/manifests/metallb.yaml
+cat <<EOF > /tmp/metallb-config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: metallb-system
+  name: config
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - ${METALLB_ADDRESSES}
+EOF
+kubectl apply -f /tmp/metallb-config.yaml

@@ -27,10 +27,11 @@ See [Virtual Box](https://www.virtualbox.org/) for download and installation ins
 ## Build and Run
 
 1. Update the name of the bridged adaptor in the `Vagrantfile` to match the host.
-2. Copy `/<repo-location>/servers.yml.tmpl` to `/<repo-location>/servers.yml` and modify as needed.
-    * The first entry will be applied to the control-plane and the remainder to the worker nodes.
-    * If a single entry is specified only the control-plane will be created.
-    * **Important:** All entries must be internet routable.
+2. Copy `/<repo-location>/settings.yml.tmpl` to `/<repo-location>/settings.yml` and modify as needed.
+   * The addresses for `metallb` must be internet routable.
+   * The first entry in `servers` will be applied to the control-plane and the remainder to the worker nodes.
+     * If a single `server` entry is specified only the control-plane will be created.
+     * All `ipv6`s must be internet routable.
 3. Bring up the virtual machines:
 
    ```shell
@@ -78,3 +79,4 @@ See [Vagrant: Destroy](https://www.vagrantup.com/docs/cli/destroy) for additiona
 * [Install calicoctl](https://projectcalico.docs.tigera.io/maintenance/clis/calicoctl/install)
 * [kubeadm Configuration (v1beta3) Overview](https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta3/)
 * [Container runtimes: containerd](https://kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd)
+* [MetalLB: Layer 2 Configuration](https://metallb/universe.tf/configuration#layer-2-configuration)

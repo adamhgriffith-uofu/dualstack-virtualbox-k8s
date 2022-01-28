@@ -3,6 +3,11 @@
 # values here. See README.md for instructions.     #
 ####################################################
 
+global:
+  metallb:
+    addresses: <value>
+
+servers:
 - name: <value>
   ipv4: <value allowed by VirtualBox's Host-only network, e.g. 192.168.56.11>
   ipv4_gw: <value>

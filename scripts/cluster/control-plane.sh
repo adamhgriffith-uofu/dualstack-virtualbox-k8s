@@ -164,7 +164,7 @@ echo "Creating portion of new cluster join config..."
 K8_TOKEN=$(kubeadm token create)
 K8_DISCO_CERT=$(openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //')
 cat <<EOF > /vagrant_work/join-config.yml.part
-apiVersion: kubeadm.k8s.io/v1beta3
+apiVersion: kubeadm.k8s.io/v1beta2
 kind: JoinConfiguration
 discovery:
   bootstrapToken:

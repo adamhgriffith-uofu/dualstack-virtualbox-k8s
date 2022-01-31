@@ -9,8 +9,10 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # NOTE: Changes to CLUSTER_CIDR must be reflected in /resources/manifests/calico.yml's
 #       CALICO_IPV4POOL_CIDR and CALICO_IPV6POOL_CIDR environmental variables.
+API_BIND_IP=0.0.0.0
 CLUSTER_CIDR=10.10.0.0/16,fc00:db8:1234:5678:8:2::/104
 CLUSTER_DNS=10.20.0.10
+KUBELET_HEALTHZ_BIND_IP=127.0.0.1
 SERVICE_CLUSTER_IP_RANGE=10.20.0.0/16,fc00:db8:1234:5678:8:3::/112
 
 echo "Initializing the Kubernetes cluster with Kubeadm..."
@@ -31,14 +33,14 @@ nodeRegistration:
 apiServer:
   extraArgs:
     advertise-address: ${IPV4_ADDR}
-    bind-address: '0.0.0.0'
+    bind-address: ${API_BIND_IP}
     etcd-servers: https://${IPV4_ADDR}:2379
     service-cluster-ip-range: ${SERVICE_CLUSTER_IP_RANGE}
 apiVersion: kubeadm.k8s.io/v1beta2
 controllerManager:
   extraArgs:
     allocate-node-cidrs: 'true'
-    bind-address: '0.0.0.0'
+    bind-address: ${API_BIND_IP}
     cluster-cidr: ${CLUSTER_CIDR}
     node-cidr-mask-size-ipv4: '24'
     node-cidr-mask-size-ipv6: '120'
@@ -57,13 +59,13 @@ networking:
   serviceSubnet: ${SERVICE_CLUSTER_IP_RANGE}
 scheduler:
   extraArgs:
-    bind-address: '0.0.0.0'
+    bind-address: ${API_BIND_IP}
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 cgroupDriver: systemd
 clusterDNS:
 - ${CLUSTER_DNS}
-healthzBindAddress: 127.0.0.1
+healthzBindAddress: ${KUBELET_HEALTHZ_BIND_IP}
 kind: KubeletConfiguration
 ---
 apiVersion: kubeproxy.config.k8s.io/v1alpha1

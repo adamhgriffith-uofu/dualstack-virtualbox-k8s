@@ -93,6 +93,9 @@ Vagrant.configure("2") do |config|
         }
         script.path = "./scripts/os-requirements.sh"
       end
+      node.vm.provision "shell",
+        run: "always",
+        inline: "ip route del default via 10.0.2.2 dev eth0 proto dhcp metric 100"
       node.vm.provision "shell", path: "./scripts/cluster/containerd.sh"
       node.vm.provision "shell" do |script|
         script.env = {

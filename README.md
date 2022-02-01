@@ -24,14 +24,19 @@ See [Virtual Box](https://www.virtualbox.org/) for download and installation ins
   vagrant autocomplete install --bash
   ```
 
+### Internet Routable IPs
+
+A set of internet routable IP addresses (both IPv4 and IPv6) are required for the VMs and MetalLB.
+
 ## Build and Run
 
 1. Update the name of the bridged adaptor in the `Vagrantfile` to match the host.
 2. Copy `/<repo-location>/settings.yml.tmpl` to `/<repo-location>/settings.yml` and modify as needed.
    * The addresses for `metallb` must be internet routable.
    * The first entry in `servers` will be applied to the control-plane and the remainder to the worker nodes.
-     * If a single `server` entry is specified only the control-plane will be created.
-     * All `ipv6`s must be internet routable.
+   * If a single `server` entry is specified only the control-plane will be created.
+   * All `ipv4`s must be internet routable.
+   * All `ipv6`s must be internet routable.
 3. Bring up the virtual machines:
 
    ```shell

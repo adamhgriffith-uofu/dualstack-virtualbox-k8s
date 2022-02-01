@@ -95,6 +95,7 @@ Vagrant.configure("2") do |config|
       end
       node.vm.provision "shell",
         run: "always",
+        # Don't want NAT routes, only bridged routes so need to disable this.
         inline: "ip route del default via 10.0.2.2 dev eth0 proto dhcp metric 100"
       node.vm.provision "shell", path: "./scripts/cluster/containerd.sh"
       node.vm.provision "shell" do |script|

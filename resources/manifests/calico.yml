@@ -3608,7 +3608,7 @@ spec:
             - name: IP6
               value: "autodetect"
             - name: IP6_AUTODETECTION_METHOD
-              value: "interface=eth2"
+              value: "interface=eth1"
             - name: FELIX_IPV6SUPPORT
               value: "true"
             - name: CALICO_IPV6POOL_CIDR

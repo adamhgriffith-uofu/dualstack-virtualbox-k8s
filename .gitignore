@@ -3,4 +3,4 @@
 .vagrant
 
 # Local Files
-settings.yml
+settings*.yml

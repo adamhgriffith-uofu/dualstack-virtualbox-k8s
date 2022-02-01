@@ -11,9 +11,10 @@ require 'yaml'
 ENV['BRIDGED_ADAPTER'] = "enp8s0"
 ENV['KUBE_VERSION'] = "1.21.*"
 ENV['METALLB_VERSION'] = "0.11.0"
+ENV['SETTINGS_PATH'] = "./settings.yml"
 
 # Load settings from file:
-settings = YAML.load_file('./settings.yml')
+settings = YAML.load_file(ENV['SETTINGS_PATH'])
 servers = settings['servers']
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
@@ -50,10 +51,7 @@ Vagrant.configure("2") do |config|
       node.vm.box = "centos/7"
       node.vm.hostname = server['name']
 
-      # Create a private IPv4 network.
-      node.vm.network "private_network", ip: server['ipv4'], netmask: server['ipv4_mask']
-
-      # Create a bridged network adaptor (for IPv6).
+      # Create a bridged network adaptor.
       node.vm.network "public_network", auto_config: false, bridge: ENV['BRIDGED_ADAPTER']
 
       # VirtualBox Provider
@@ -86,12 +84,18 @@ Vagrant.configure("2") do |config|
       node.vm.provision "shell" do |script|
         script.env = {
             IPV4_ADDR: server['ipv4'],
+            IPV4_MASK: server['ipv4_mask'],
+            IPV4_GW: server['ipv4_gw'],
             IPV6_ADDR: server['ipv6'],
+            IPV6_MASK: server['ipv6_mask'],
             IPV6_GW: server['ipv6_gw'],
             SEARCH_DOMAINS: server['search_domains']
         }
         script.path = "./scripts/os-requirements.sh"
       end
+      node.vm.provision "shell",
+        run: "always",
+        inline: "ip route del default via 10.0.2.2 dev eth0 proto dhcp metric 100"
       node.vm.provision "shell", path: "./scripts/cluster/containerd.sh"
       node.vm.provision "shell" do |script|
         script.env = {

@@ -11,7 +11,7 @@ require 'yaml'
 ENV['BRIDGED_ADAPTER'] = "enp8s0"
 ENV['KUBE_VERSION'] = "1.21.*"
 ENV['METALLB_VERSION'] = "0.11.0"
-ENV['SETTINGS_PATH'] = "./settings-ipv4.yml"
+ENV['SETTINGS_PATH'] = "./settings.yml"
 
 # Load settings from file:
 settings = YAML.load_file(ENV['SETTINGS_PATH'])

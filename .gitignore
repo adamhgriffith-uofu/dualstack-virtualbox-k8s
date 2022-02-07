@@ -3,4 +3,5 @@
 .vagrant
 
 # Local Files
+ansible/inventory/vagrant/hosts.yml
 settings*.yml

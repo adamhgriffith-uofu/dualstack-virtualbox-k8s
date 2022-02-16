@@ -7,10 +7,7 @@ Vagrant.require_version ">= 2.0.0"
 require 'yaml'
 
 # Environmental Variables:
-# TODO: Add support for Calico version environmental variable.
 ENV['BRIDGED_ADAPTER'] = "enp8s0"
-ENV['KUBE_VERSION'] = "1.21.*"
-ENV['METALLB_VERSION'] = "0.11.0"
 ENV['SETTINGS_PATH'] = "./settings.yml"
 
 # Load settings from file:
@@ -72,14 +69,6 @@ Vagrant.configure("2") do |config|
         vb.name = server['name']
       end
 
-      if index < 1
-        # Perform housekeeping on `vagrant destroy` of the control-plane (a.k.a. master) node..
-        node.trigger.before :destroy do |trigger|
-          trigger.warn = "Performing housekeeping before starting destroy..."
-          trigger.run_remote = {path: "./scripts/cluster/housekeeping.sh"}
-        end
-      end
-
       # Provision with shell scripts.
       node.vm.provision "shell" do |script|
         script.env = {
@@ -97,34 +86,9 @@ Vagrant.configure("2") do |config|
         run: "always",
         # Don't want NAT routes, only bridged routes so need to disable this.
         inline: "ip route del default via 10.0.2.2 dev eth0 proto dhcp metric 100"
-      node.vm.provision "shell", path: "./scripts/cluster/containerd.sh"
-      node.vm.provision "shell" do |script|
-        script.env = {
-          KUBE_VERSION:ENV['KUBE_VERSION']
-        }
-        script.path = "./scripts/cluster/kubernetes.sh"
-      end
-      if index < 1
-        # The control-plane (a.k.a. master) node.
-        node.vm.provision "shell" do |script|
-          script.env = {
-            IPV4_ADDR: server['ipv4'],
-            IPV6_ADDR: server['ipv6'],
-            METALLB_ADDRESSES: settings['global']['metallb']['addresses'],
-            METALLB_VERSION:ENV['METALLB_VERSION']
-          }
-          script.path = "./scripts/cluster/control-plane.sh"
-        end
-      else
-        # The worker node(s).
-        node.vm.provision "shell" do |script|
-          script.env = {
-            IPV4_ADDR: server['ipv4'],
-            IPV6_ADDR: server['ipv6']
-          }
-          script.path = "./scripts/cluster/worker.sh"
-        end
-      end
+
+      # Provision with Ansible from the Vagrant Host.provision
+
     end
   end
 end
